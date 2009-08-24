@@ -1,4 +1,6 @@
-This should say something useful. 
+This is a couple of small plugins that i use in everyday work that could come in handy.
+
+See github wiki for more info.
 
 jquery.autofill.js
 This hides labels and adds it to their input and also have click and blur stuff.
