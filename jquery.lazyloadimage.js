@@ -5,34 +5,19 @@
  */
 $.fn.lazyLoadImage = function(o, callback) {
 	var self = this;
-	$.i = 0;
-	if (o == 'load') {
-		callback = typeof callback == 'undefined' ? function(){} : callback;
-		
-		if ($.o.queue == true) {
-			$.queue($(this));
-			return;
-		} else {
-			return this.each(function() {
-				$.add(this);
-				$.callback(this, callback);
-			});
-		}
-	}
-	o = $.o = $.extend({nocache: false, queue: false, replaceImg: 'blank.gif'}, o);
-	
-	$.add = function(el) {
+	$.ll = typeof $.ll == 'undefined' ? {i:0} : $.ll;
+	$.ll.add = function(el) {
 		$(el).attr('src', $(el).attr('original'));
 		$(el).removeAttr('original');
 	};
-	$.remove = function(el) {
+	$.ll.remove = function(el) {
 			$(el).attr('original', $(el).attr('src'));
 			if (o.replaceImg == null)
 				$(el).removeAttr('src');
 			else 
 				$(el).attr('src', o.replaceImg);
 	};
-	$.callback = function(el, callback) {
+	$.ll.callback = function(el, callback) {
 		//for ie if img is cached
 		if(el.complete) {
 			callback(el);
@@ -42,19 +27,33 @@ $.fn.lazyLoadImage = function(o, callback) {
 			};
 		}
 	};
-	
-	$.queue = function(el) {
-		$.add(el[$.i]);
-		$.callback(el[$.i], function() {
-			$.i++;
+	$.ll.queue = function(el) {
+		$.ll.add(el[$.ll.i]);
+		$.ll.callback(el[$.ll.i], function() {
+			$.ll.i++;
 			//console.log('i: '+$.i+' self.length: '+self.length);
-			if ($.i >= self.length) {
+			if ($.ll.i >= self.length) {
 				return false;
 			}
-			$.queue(self);
+			$.ll.queue(self);
 		});
 	};
+	
+	if (o == 'load') {
+		callback = typeof callback == 'undefined' ? function(){} : callback;
+		if ($.ll.o.queue == true) {
+			$.ll.queue($(this));
+			return;
+		} else {
+			return this.each(function() {
+				$.ll.add(this);
+				$.ll.callback(this, callback);
+			});
+		}
+	}
+	o = $.ll.o = $.extend({nocache: false, queue: false, replaceImg: 'blank.gif'}, o);
+
 	return this.each(function() {
-		$.remove(this);
+		$.ll.remove(this);
 	});
 };
