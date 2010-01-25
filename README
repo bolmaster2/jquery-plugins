@@ -7,3 +7,5 @@ This hides labels and adds it to their input and also have click and blur stuff.
 
 jquery.lazyloadimage.js
 This lazyloads images and let you call the load on demand. Inspired by LazyLoad plugin( http://www.appelsiini.net/projects/lazyload )
+
+TEST!
